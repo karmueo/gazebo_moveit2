@@ -34,7 +34,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     world_param = DeclareLaunchArgument(
         "world",
         default_value=path.join(
-            get_package_share_directory("ign_moveit2_examples"),
+            get_package_share_directory("aubo_moveit_config"),
             "worlds",
             "follow_target.sdf",
         ),
