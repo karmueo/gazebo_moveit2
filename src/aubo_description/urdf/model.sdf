@@ -372,5 +372,8 @@
         </material>
       </visual>
     </link>
+    <plugin name='ign_ros2_control::IgnitionROS2ControlPlugin' filename='ign_ros2_control-system'>
+      <parameters>/home/xvshuo/work/scl/gazebo_moviet2/src/aubo_moveit_config/config/ros2_controllers.yaml</parameters>
+    </plugin>
   </model>
 </sdf>
