@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>aubo_follow_target</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="karmueo@163.com">shenchangli</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- rclcpp 是ROS 2中的一个C++客户端库，它提供了与ROS 2核心功能进行交互的接口，例如节点创建、消息发布和订阅、服务调用等。 -->
+  <depend>rclcpp</depend>
+  <!-- geometry_msgs 是一个消息包，包含了描述几何信息的消息类型，例如点、向量、四元数和变换等 -->
+  <depend>geometry_msgs</depend>
+  <!-- moveit_ros_planning_interface 是MoveIt!的一个组件，这个接口提供了与MoveIt进行交互的功能，例如运动规划、碰撞检测和路径执行等。 -->
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_core</depend>
+
+  <!-- exec_depend表示仅在包运行时需要 -->
+  <exec_depend>ign_ros2_control</exec_depend>
+  <exec_depend>moveit</exec_depend>
+  <exec_depend>pymoveit2</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>ros_ign_bridge</exec_depend>
+  <exec_depend>ros_ign_gazebo</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>aubo_description</exec_depend>
+  <exec_depend>aubo_moveit_config</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
