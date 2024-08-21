@@ -44,7 +44,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
 
     world = LaunchConfiguration("world")
 
-    # xacro转sdf
+    # TODO: 1. xacro转sdf
     xacro2sdf = ExecuteProcess(
         cmd=[
             PathJoinSubstitution([FindExecutable(name="ros2")]),
@@ -81,7 +81,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
             )
         )
 
-    # 启动 move_group 节点
+    # TODO: 2. 启动 move_group 节点
     ld.add_action(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -91,7 +91,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     )
 
     # Run Rviz and load the default config to see the state of the move_group node
-    # 运行 Rviz 并加载默认配置以查看 move_group 节点的状态
+    # TODO: 3.运行 Rviz 并加载默认配置以查看 move_group 节点的状态
     ld.add_action(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -116,7 +116,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
         )
 
     # Given the published joint states, publish tf for the robot links and the robot description
-    # 给定已发布的关节状态，发布机器人坐标系的 tf 和机器人描述
+    # TODO: 4.给定已发布的关节状态，发布机器人坐标系的 tf 和机器人描述
     rsp_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -129,7 +129,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     )
     ld.add_action(rsp_node)
 
-    # 启动gazebo仿真
+    # TODO: 5.启动gazebo仿真
     ld.add_action(
         IncludeLaunchDescription(  # 在一个 launch 文件中包含另一个 launch 文件
             PythonLaunchDescriptionSource(  # 指定被包含的 launch 文件的路径
@@ -145,7 +145,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
         )
     )
 
-    # gazebo中创建机器人模型和ros2_bridge
+    # TODO: 6.gazebo中创建机器人模型和ros2_bridge
     ros_gz_sim_create = RegisterEventHandler(
         OnProcessExit(
             target_action=xacro2sdf,
