@@ -201,6 +201,16 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
                     parameters=[{"use_sim_time": True}],
                     remappings=[("/model/target/pose", "/target_pose")],
                 ),
+                # Camera Bridge
+                Node(
+                    package="ros_gz_bridge",
+                    executable="parameter_bridge",
+                    arguments=[
+                        "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
+                        "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+                    ],
+                    output="log",
+                ),
             ],
         )
     )

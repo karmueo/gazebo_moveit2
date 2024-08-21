@@ -16,6 +16,15 @@
       <real_time_factor>1.0</real_time_factor>
     </physics>
 
+    <!-- 相机插件 -->
+    <plugin filename="ignition-gazebo-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre</render_engine>
+    </plugin>
+
+    <!-- User Commands (transform control) -->
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+
     <!-- Scene -->
     <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster">
     </plugin>
@@ -23,11 +32,6 @@
       <ambient>0.8 0.8 0.8</ambient>
       <grid>true</grid>
     </scene>
-
-    <!-- User Commands (transform control) -->
-    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands">
-    </plugin>
-
 
     <!--              -->
     <!-- 光照 -->
