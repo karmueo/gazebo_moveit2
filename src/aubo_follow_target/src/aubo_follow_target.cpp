@@ -88,12 +88,18 @@ void MoveItFollowTarget::target_pose_callback(const geometry_msgs::msg::PoseStam
     double fraction = move_group_.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
 
     // 检查路径规划是否成功
-    if (fraction < 0.2) // 若成功率低于 %，视为失败
+    if (fraction < 0.9) // 若成功率低于 %，视为失败
     {
         RCLCPP_WARN(this->get_logger(), "笛卡尔路径规划成功率低于预期: %f", fraction);
         // 设置目标位姿并执行
         this->move_group_.setPoseTarget(msg->pose);
-        this->move_group_.move();
+        moveit::planning_interface::MoveGroupInterface::Plan plan;
+        bool success = (this->move_group_.plan(plan) == moveit::core::MoveItErrorCode::SUCCESS);
+        RCLCPP_INFO(this->get_logger(), "执行规划: %s", success ? "成功" : "失败");
+        if (success)
+        {
+            this->move_group_.execute(plan);
+        }
     }
     else
     {
