@@ -1,0 +1,27 @@
+<sdf version="1.6">
+    <model name="textured_wall">
+        <static>true</static>
+        <pose>0 0 1 0 -1.57 -1.57</pose>
+        <link name="wall_link">
+            <visual name="wall_visual">
+                <geometry>
+                    <box>
+                        <size>0.86 0.64 0.05</size>                        <!-- 调整尺寸以匹配您的墙壁大小 -->
+                    </box>
+                </geometry>
+                <material>
+                    <shader type="pixel"/>
+                    <ambient>1 1 1 1</ambient>
+                    <diffuse>1 1 1 1</diffuse>
+                    <specular>1 1 1 1</specular>
+                    <emissive>0 0 0 0</emissive>
+                    <pbr>
+                        <metal>
+                            <albedo_map>file://home/xvshuo/work/scl/gazebo_moviet2/src/calibration/res/calib_board/textures/1.png</albedo_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+        </link>
+    </model>
+</sdf>

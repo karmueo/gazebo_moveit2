@@ -1,0 +1,16 @@
+material calib/aruco
+{
+  receive_shadows on
+  technique
+  {
+    pass
+    {
+      ambient 1.0 1.0 1.0 1.0
+      texture_unit
+      {
+        texture /home/xvshuo/work/scl/gazebo_moviet2/src/calibration/res/calib_board/materials/textures/1.png
+        scale 1.0 1.0
+      }
+    }
+  }
+}
