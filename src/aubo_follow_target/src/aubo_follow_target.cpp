@@ -85,6 +85,7 @@ void MoveItFollowTarget::target_pose_callback(const geometry_msgs::msg::PoseStam
     const double jump_threshold = 0; // 跳跃阈值
 
     move_group_.setGoalTolerance(0.01); // 设置目标位姿的容差
+    move_group_.setGoalJointTolerance(0.01);
     double fraction = move_group_.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
 
     // 检查路径规划是否成功
