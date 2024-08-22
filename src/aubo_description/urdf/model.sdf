@@ -372,6 +372,82 @@
         </material>
       </visual>
     </link>
+
+    <!-- 相机链接 -->
+    <link name='camera_link'>
+      <pose relative_to='wrist3_Link'>0 0 0.01 0 0 0</pose>      <!-- 相机位置和方向相对于 wrist3_Link -->
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <iyy>0.0001</iyy>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='camera_collision'>
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>            <!-- 底部的半径 -->
+            <length>0.05</length>            <!-- 圆柱的高度 -->
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='camera_visual_base'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>            <!-- 底部的半径 -->
+            <length>0.03</length>            <!-- 底部圆柱的高度 -->
+          </cylinder>
+        </geometry>
+        <material>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+        </material>
+      </visual>
+      <visual name='camera_visual_top'>
+        <pose>0 0 0.03 0 0 0</pose>        <!-- 顶部部分的相对位置 -->
+        <geometry>
+          <cylinder>
+            <radius>0.02</radius>            <!-- 顶部的半径 -->
+            <length>0.02</length>            <!-- 顶部圆柱的高度 -->
+          </cylinder>
+        </geometry>
+        <material>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+        </material>
+      </visual>
+      <sensor name='camera' type='camera'>
+        <pose>0 0 0.05 -1.57080 -1.5708 0</pose>        <!-- 相机的光学中心位置 -->
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>800</width>
+            <height>600</height>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>15</update_rate>
+        <visualize>true</visualize>
+        <topic>/camera</topic>
+      </sensor>
+    </link>
+
+    <!-- 将相机链接固定在机器人末端执行器上 -->
+    <joint name='camera_joint' type='fixed'>
+      <parent>wrist3_Link</parent>
+      <child>camera_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
+    <!-- 相机插件 -->
+    <plugin filename="ignition-gazebo-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre</render_engine>
+    </plugin>
+
     <plugin name='ign_ros2_control::IgnitionROS2ControlPlugin' filename='ign_ros2_control-system'>
       <parameters>/home/xvshuo/work/scl/gazebo_moviet2/src/aubo_moveit_config/config/ros2_controllers.yaml</parameters>
     </plugin>
