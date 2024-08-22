@@ -45,19 +45,19 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     world = LaunchConfiguration("world")
 
     # TODO: 1. xacro转sdf
-    xacro2sdf = ExecuteProcess(
-        cmd=[
-            PathJoinSubstitution([FindExecutable(name="ros2")]),
-            "run",
-            "aubo_description",
-            "xacro2sdf.bash",
-            ["ros2_control:=", "true"],
-            ["ros2_control_plugin:=", "gz"],
-            ["ros2_control_command_interface:=", "position"],
-        ],
-        shell=True,
-    )
-    ld.add_action(xacro2sdf)
+    # xacro2sdf = ExecuteProcess(
+    #     cmd=[
+    #         PathJoinSubstitution([FindExecutable(name="ros2")]),
+    #         "run",
+    #         "aubo_description",
+    #         "xacro2sdf.bash",
+    #         ["ros2_control:=", "true"],
+    #         ["ros2_control_plugin:=", "gz"],
+    #         ["ros2_control_command_interface:=", "position"],
+    #     ],
+    #     shell=True,
+    # )
+    # ld.add_action(xacro2sdf)
 
     # 声明一个布尔类型的 launch 参数，用于控制是否启用调试模式
     ld.add_action(
@@ -146,75 +146,156 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     )
 
     # TODO: 6.gazebo中创建机器人模型和ros2_bridge
-    ros_gz_sim_create = RegisterEventHandler(
-        OnProcessExit(
-            target_action=xacro2sdf,
-            on_exit=[
-                Node(
-                    package="ros_gz_sim",
-                    executable="create",
-                    output="log",
-                    arguments=[
-                        "-file",
-                        PathJoinSubstitution(
-                            [
-                                FindPackageShare("aubo_description"),
-                                "urdf/model.sdf",
-                            ]
-                        ),
-                        "--ros-args",
-                        "--log-level",
-                        "warn",
-                    ],
-                    parameters=[{"use_sim_time": True}],
-                ),
-                # ros_ign_bridge (clock -> ROS 2)
-                Node(
-                    package="ros_ign_bridge",
-                    executable="parameter_bridge",
-                    output="log",
-                    arguments=[
-                        "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-                        "--ros-args",
-                        "--log-level",
-                        "warn",
-                    ],
-                    parameters=[{"use_sim_time": True}],
-                ),
-                # ros_ign_bridge (target pose -> ROS 2)
-                # /model/target/pose" 是一个ROS话题名称
-                # @ 是一个分隔符，用于分隔ROS话题名称和消息类型
-                # "geometry_msgs/msg/PoseStamped[ignition.msgs.Pose" 指定了ROS消息类型和Ignition消息类型之间的映射，表示
-                # 连在一起的两个消息类型之间的映射关系：ROS消息类型是 geometry_msgs/PoseStamped，话题是 /model/target/pose，Ignition消息类型是 ignition.msgs.Pose，方向是从Ignition到ROS。
-                Node(
-                    package="ros_ign_bridge",
-                    executable="parameter_bridge",
-                    output="log",
-                    arguments=[
-                        "/model/target/pose"
-                        + "@"
-                        + "geometry_msgs/msg/PoseStamped[ignition.msgs.Pose",
-                        "--ros-args",
-                        "--log-level",
-                        "warn",
-                    ],
-                    parameters=[{"use_sim_time": True}],
-                    remappings=[("/model/target/pose", "/target_pose")],
-                ),
-                # Camera Bridge
-                Node(
-                    package="ros_gz_bridge",
-                    executable="parameter_bridge",
-                    arguments=[
-                        "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
-                        "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
-                    ],
-                    output="log",
-                ),
-            ],
-        )
+    create_model = Node(
+        package="ros_gz_sim",
+        executable="create",
+        output="log",
+        arguments=[
+            "-file",
+            PathJoinSubstitution(
+                [
+                    FindPackageShare("aubo_description"),
+                    "urdf/model.sdf",
+                ]
+            ),
+            "--ros-args",
+            "--log-level",
+            "warn",
+        ],
+        parameters=[{"use_sim_time": True}],
     )
-    ld.add_action(ros_gz_sim_create)
+    ld.add_action(create_model)
+
+    # create_board = Node(
+    #     package="ros_gz_sim",
+    #     executable="create",
+    #     output="log",
+    #     arguments=[
+    #         "-file",
+    #         "/home/xvshuo/work/scl/gazebo_moviet2/src/Calibration Plane/calibration_plane.sdf",
+    #         "--ros-args",
+    #         "--log-level",
+    #         "warn",
+    #     ],
+    #     parameters=[{"use_sim_time": True}],
+    # )
+    # ld.add_action(create_board)
+
+    clock_bridge = Node(
+        package="ros_gz_sim",
+        executable="create",
+        output="log",
+        arguments=[
+            "-file",
+            PathJoinSubstitution(
+                [
+                    FindPackageShare("aubo_description"),
+                    "urdf/model.sdf",
+                ]
+            ),
+            "--ros-args",
+            "--log-level",
+            "warn",
+        ],
+        parameters=[{"use_sim_time": True}],
+    )
+    ld.add_action(clock_bridge)
+
+    target_pose_bridge = Node(
+        package="ros_ign_bridge",
+        executable="parameter_bridge",
+        output="log",
+        arguments=[
+            "/model/target/pose@geometry_msgs/msg/PoseStamped[ignition.msgs.Pose",
+            "--ros-args",
+            "--log-level",
+            "warn",
+        ],
+        parameters=[{"use_sim_time": True}],
+        remappings=[("/model/target/pose", "/target_pose")],
+    )
+    ld.add_action(target_pose_bridge)
+
+    camrea_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
+            "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+        ],
+        output="log",
+    )
+    ld.add_action(camrea_bridge)
+
+    # ros_gz_sim_create = RegisterEventHandler(
+    #     OnProcessExit(
+    #         target_action=xacro2sdf,
+    #         on_exit=[
+    #             Node(
+    #                 package="ros_gz_sim",
+    #                 executable="create",
+    #                 output="log",
+    #                 arguments=[
+    #                     "-file",
+    #                     PathJoinSubstitution(
+    #                         [
+    #                             FindPackageShare("aubo_description"),
+    #                             "urdf/model.sdf",
+    #                         ]
+    #                     ),
+    #                     "--ros-args",
+    #                     "--log-level",
+    #                     "warn",
+    #                 ],
+    #                 parameters=[{"use_sim_time": True}],
+    #             ),
+    #             # ros_ign_bridge (clock -> ROS 2)
+    #             Node(
+    #                 package="ros_ign_bridge",
+    #                 executable="parameter_bridge",
+    #                 output="log",
+    #                 arguments=[
+    #                     "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+    #                     "--ros-args",
+    #                     "--log-level",
+    #                     "warn",
+    #                 ],
+    #                 parameters=[{"use_sim_time": True}],
+    #             ),
+    #             # ros_ign_bridge (target pose -> ROS 2)
+    #             # /model/target/pose" 是一个ROS话题名称
+    #             # @ 是一个分隔符，用于分隔ROS话题名称和消息类型
+    #             # "geometry_msgs/msg/PoseStamped[ignition.msgs.Pose" 指定了ROS消息类型和Ignition消息类型之间的映射，表示
+    #             # 连在一起的两个消息类型之间的映射关系：ROS消息类型是 geometry_msgs/PoseStamped，话题是 /model/target/pose，Ignition消息类型是 ignition.msgs.Pose，方向是从Ignition到ROS。
+    #             Node(
+    #                 package="ros_ign_bridge",
+    #                 executable="parameter_bridge",
+    #                 output="log",
+    #                 arguments=[
+    #                     "/model/target/pose"
+    #                     + "@"
+    #                     + "geometry_msgs/msg/PoseStamped[ignition.msgs.Pose",
+    #                     "--ros-args",
+    #                     "--log-level",
+    #                     "warn",
+    #                 ],
+    #                 parameters=[{"use_sim_time": True}],
+    #                 remappings=[("/model/target/pose", "/target_pose")],
+    #             ),
+    #             # Camera Bridge
+    #             Node(
+    #                 package="ros_gz_bridge",
+    #                 executable="parameter_bridge",
+    #                 arguments=[
+    #                     "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
+    #                     "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+    #                 ],
+    #                 output="log",
+    #             ),
+    #         ],
+    #     )
+    # )
+    # ld.add_action(ros_gz_sim_create)
 
     return ld
 
