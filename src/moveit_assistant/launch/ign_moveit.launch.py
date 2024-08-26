@@ -165,17 +165,11 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     ld.add_action(create_model)
 
     clock_bridge = Node(
-        package="ros_gz_sim",
-        executable="create",
+        package="ros_ign_bridge",
+        executable="parameter_bridge",
         output="log",
         arguments=[
-            "-file",
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("aubo_description"),
-                    "urdf/model2.sdf",
-                ]
-            ),
+            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
             "--ros-args",
             "--log-level",
             "warn",
