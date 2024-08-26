@@ -1,5 +1,5 @@
 """ Static transform publisher acquired via MoveIt 2 hand-eye calibration """
-""" EYE-TO-HAND: base_link -> aubo_i10/wrist3_Link/camera """
+""" EYE-IN-HAND: wrist3_Link -> aubo_i10/wrist3_Link/camera """
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
@@ -12,29 +12,29 @@ def generate_launch_description() -> LaunchDescription:
             output="log",
             arguments=[
                 "--frame-id",
-                "base_link",
+                "wrist3_Link",
                 "--child-frame-id",
                 "aubo_i10/wrist3_Link/camera",
                 "--x",
-                "-0.0152006",
+                "0.0016384",
                 "--y",
-                "34.1445",
+                "-0.011371",
                 "--z",
-                "1.35012",
+                "0.106924",
                 "--qx",
-                "-0.528908",
+                "3.21155e-05",
                 "--qy",
-                "-0.474943",
+                "0.000702105",
                 "--qz",
-                "-0.488221",
+                "0.999999",
                 "--qw",
-                "0.506287",
+                "0.00101642",
                 # "--roll",
-                # "1.56016",
+                # "3.14019",
                 # "--pitch",
-                # "3.10605",
+                # "3.14153",
                 # "--yaw",
-                # "1.64304",
+                # "-0.00203279",
             ],
         ),
     ]

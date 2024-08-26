@@ -6,7 +6,7 @@
             <visual name="wall_visual">
                 <geometry>
                     <box>
-                        <size>0.86 0.64 0.05</size>                        <!-- 调整尺寸以匹配您的墙壁大小 -->
+                        <size>0.9 0.68 0.05</size>                        <!-- 调整尺寸以匹配您的墙壁大小 -->
                     </box>
                 </geometry>
                 <material>
