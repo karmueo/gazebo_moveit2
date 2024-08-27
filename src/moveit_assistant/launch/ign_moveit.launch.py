@@ -156,6 +156,18 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
                     "urdf/model2.sdf",
                 ]
             ),
+            "-x",
+            "0.2",  # 指定X坐标
+            "-y",
+            "0.0",  # 指定Y坐标
+            "-z",
+            "1.025",  # 指定Z坐标
+            "-R",
+            "0.0",  # 指定绕X轴的旋转（Roll）
+            "-P",
+            "0.0",  # 指定绕Y轴的旋转（Pitch）
+            "-Y",
+            "0.0",  # 指定绕Z轴的旋转（Yaw）
             "--ros-args",
             "--log-level",
             "warn",
