@@ -222,7 +222,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
 
 def generate_launch_description():
     moveit_config = MoveItConfigsBuilder(
-        "aubo_i10", package_name="aubo_moveit_config"
+        "aubo_i10", package_name="moveit_assistant"
     ).to_moveit_configs()
     ld = generate_demo_launch(moveit_config)
 
