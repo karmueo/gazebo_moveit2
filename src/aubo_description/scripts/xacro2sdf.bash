@@ -6,7 +6,9 @@
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" &>/dev/null && pwd)"
 # 设置XACRO_PATH为包含aubo_i10.urdf.xacro文件的文件夹路径
 # XACRO_PATH="$(dirname "${SCRIPT_DIR}")/urdf/aubo_i10.urdf.xacro"
-XACRO_PATH="/home/xvshuo/work/scl/gazebo_moviet2/src/moveit_assistant/config/aubo_i10.urdf.xacro"
+# FIXME:不要使用绝对路径
+XACRO_PATH="$(ros2 pkg prefix moveit_assistant)/share/moveit_assistant/config/aubo_i10.urdf.xacro"
+# "/home/ros2/ws/gazebo_moveit2/src/moveit_assistant/config/aubo_i10.urdf.xacro"
 # 设置SDF_PATH为包含model.sdf文件的文件夹路径
 SDF_PATH="$(dirname "${SCRIPT_DIR}")/urdf/model2.sdf"
 
