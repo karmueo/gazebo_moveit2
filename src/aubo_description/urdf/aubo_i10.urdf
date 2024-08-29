@@ -284,11 +284,6 @@
     <plugin filename="ignition-gazebo-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre</render_engine>
     </plugin>
-
-    <!-- ROS2控制插件 -->
-    <plugin name="ign_ros2_control::IgnitionROS2ControlPlugin" filename="ign_ros2_control-system">
-      <parameters>$(find moveit_assistant)/config/ros2_controllers.yaml</parameters>
-    </plugin>
   </gazebo>
 
 </robot>
