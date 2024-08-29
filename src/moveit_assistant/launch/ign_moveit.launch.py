@@ -114,17 +114,6 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
 
     # Given the published joint states, publish tf for the robot links and the robot description
     # TODO: 4.给定已发布的关节状态，发布机器人坐标系的 tf 和机器人描述
-    # URDF
-    _robot_description_xml = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            PathJoinSubstitution(
-                [FindPackageShare("moveit_assistant"), "config", "aubo_i10.urdf.xacro"]
-            ),
-        ]
-    )
-    robot_description = {"robot_description": _robot_description_xml}
     # robot_state_publisher
     rsp_node = Node(
         package="robot_state_publisher",
