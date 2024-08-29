@@ -8,6 +8,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
+    Command,
+    FindExecutable,
 )
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
@@ -112,14 +114,30 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
 
     # Given the published joint states, publish tf for the robot links and the robot description
     # TODO: 4.给定已发布的关节状态，发布机器人坐标系的 tf 和机器人描述
+    # URDF
+    _robot_description_xml = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [FindPackageShare("moveit_assistant"), "config", "aubo_i10.urdf.xacro"]
+            ),
+        ]
+    )
+    robot_description = {"robot_description": _robot_description_xml}
+    # robot_state_publisher
     rsp_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         respawn=True,
-        output="screen",
+        output="log",
+        arguments=["--ros-args", "--log-level", "warn"],
         parameters=[
             moveit_config.robot_description,
-            {"publish_frequency": 200.0, "use_sim_time": True},
+            {
+                "publish_frequency": 50.0,
+                "use_sim_time": True,
+            },
         ],
     )
     ld.add_action(rsp_node)
@@ -146,13 +164,8 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
         executable="create",
         output="log",
         arguments=[
-            "-file",
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("aubo_description"),
-                    "urdf/model2.sdf",
-                ]
-            ),
+            "-topic",
+            "robot_description",
             "-x",
             "0.2",  # 指定X坐标
             "-y",
@@ -173,46 +186,23 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
     )
     ld.add_action(create_model)
 
-    clock_bridge = Node(
-        package="ros_ign_bridge",
-        executable="parameter_bridge",
-        output="log",
-        arguments=[
-            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-            "--ros-args",
-            "--log-level",
-            "warn",
-        ],
-        parameters=[{"use_sim_time": True}],
-    )
-    ld.add_action(clock_bridge)
-
-    target_pose_bridge = Node(
-        package="ros_ign_bridge",
-        executable="parameter_bridge",
-        output="log",
-        arguments=[
-            "/model/target/pose@geometry_msgs/msg/PoseStamped[ignition.msgs.Pose",
-            "--ros-args",
-            "--log-level",
-            "warn",
-        ],
-        parameters=[{"use_sim_time": True}],
-        remappings=[("/model/target/pose", "/target_pose")],
-    )
-    ld.add_action(target_pose_bridge)
-
-    camrea_bridge = Node(
+    ros_gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
-        arguments=[
-            "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
-            "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+        parameters=[
+            {
+                "config_file": PathJoinSubstitution(
+                    [
+                        FindPackageShare("moveit_assistant"),
+                        "config",
+                        "ros_gz_bridge_mbot_camera.yaml",
+                    ]
+                )
+            }
         ],
-        parameters=[{"use_sim_time": True}],
-        output="log",
     )
-    ld.add_action(camrea_bridge)
+
+    ld.add_action(ros_gz_bridge)
 
     return ld
 
