@@ -264,8 +264,8 @@
       <camera>
         <horizontal_fov>1.047</horizontal_fov>
         <image>
-          <width>800</width>
-          <height>600</height>
+          <width>640</width>
+          <height>480</height>
         </image>
         <clip>
           <near>0.1</near>
@@ -273,7 +273,7 @@
         </clip>
       </camera>
       <alwaysOn>true</alwaysOn>
-      <updateRate>15</updateRate>
+      <updateRate>5</updateRate>
       <visualize>true</visualize>
       <topic>/camera</topic>
     </sensor>

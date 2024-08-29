@@ -1,9 +1,7 @@
 from moveit_configs_utils import MoveItConfigsBuilder
 from launch import LaunchDescription
 from launch.actions import (
-    ExecuteProcess,
     IncludeLaunchDescription,
-    RegisterEventHandler,
     DeclareLaunchArgument,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -22,7 +20,6 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_demo_launch(moveit_config, launch_package_path=None):
-
     # 如果没有指定 launch_package_path，就使用 moveit_config.package_path，即 `moveit_config` 的包路径
     if launch_package_path is None:
         launch_package_path = moveit_config.package_path
@@ -122,7 +119,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
         output="screen",
         parameters=[
             moveit_config.robot_description,
-            {"publish_frequency": 50.0, "use_sim_time": True},
+            {"publish_frequency": 200.0, "use_sim_time": True},
         ],
     )
     ld.add_action(rsp_node)
@@ -161,7 +158,7 @@ def generate_demo_launch(moveit_config, launch_package_path=None):
             "-y",
             "0.0",  # 指定Y坐标
             "-z",
-            "1.025",  # 指定Z坐标
+            "0.0",  # 指定Z坐标
             "-R",
             "0.0",  # 指定绕X轴的旋转（Roll）
             "-P",

@@ -6,12 +6,23 @@ from moveit_configs_utils.launch_utils import (
     add_debuggable_node,
     DeclareBooleanLaunchArg,
 )
-from launch.actions import (
-    DeclareLaunchArgument,
-)
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.parameter_descriptions import ParameterValue
 import os
+import yaml
+
+
+def load_yaml(package_path, file_path):
+    absolute_file_path = os.path.join(package_path, file_path)
+
+    try:
+        with open(absolute_file_path, "r") as file:
+            return yaml.safe_load(file)
+    except (
+        EnvironmentError
+    ):  # parent of IOError, OSError *and* WindowsError where available
+        return None
 
 
 def generate_move_group_launch(moveit_config):
@@ -25,6 +36,7 @@ def generate_move_group_launch(moveit_config):
         DeclareBooleanLaunchArg("publish_monitored_planning_scene", default_value=True)
     )
     # load non-default MoveGroup capabilities (space separated)
+    # 加载非默认 MoveGroup 功能（空格分隔）
     ld.add_action(
         DeclareLaunchArgument(
             "capabilities",
@@ -32,11 +44,11 @@ def generate_move_group_launch(moveit_config):
             default_value="",
         )
     )
-    # inhibit these default MoveGroup capabilities (space separated)
+    # 禁止这些默认的 MoveGroup 功能（空格分隔）
     ld.add_action(DeclareLaunchArgument("disable_capabilities", default_value=""))
 
-    # do not copy dynamics information from /joint_states to internal robot monitoring
-    # default to false, because almost nothing in move_group relies on this information
+    # 不要将动态信息从 /joint_states 复制到内部机器人监控
+    # 默认为 false，因为 move_group 中几乎没有任何内容依赖于此信息
     ld.add_action(DeclareBooleanLaunchArg("monitor_dynamics", default_value=False))
 
     should_publish = LaunchConfiguration("publish_monitored_planning_scene")
@@ -44,25 +56,38 @@ def generate_move_group_launch(moveit_config):
     move_group_configuration = {
         "publish_robot_description_semantic": True,
         "allow_trajectory_execution": LaunchConfiguration("allow_trajectory_execution"),
-        # Note: Wrapping the following values is necessary so that the parameter value can be the empty string
+        # Note: 必须将以下值包装起来，以便参数值可以为空字符串
         "capabilities": ParameterValue(
             LaunchConfiguration("capabilities"), value_type=str
         ),
         "disable_capabilities": ParameterValue(
             LaunchConfiguration("disable_capabilities"), value_type=str
         ),
-        # Publish the planning scene of the physical robot so that rviz plugin can know actual robot
+        # 发布物理机器人的规划场景，以便rviz插件了真实的机器人
         "publish_planning_scene": should_publish,
         "publish_geometry_updates": should_publish,
         "publish_state_updates": should_publish,
         "publish_transforms_updates": should_publish,
         "monitor_dynamics": False,
+        # TODO:仿真时这里要改为True
         "use_sim_time": True,
     }
+
+    # 规划器
+    ompl_planning_pipeline_config = {
+        "move_group": {
+            "sample_duration": 0.005,
+        }
+    }
+    ompl_planning_yaml = load_yaml(
+        moveit_config.package_path, "config/ompl_planning.yaml"
+    )
+    ompl_planning_pipeline_config["move_group"].update(ompl_planning_yaml)
 
     move_group_params = [
         moveit_config.to_dict(),
         move_group_configuration,
+        ompl_planning_pipeline_config,
     ]
 
     add_debuggable_node(

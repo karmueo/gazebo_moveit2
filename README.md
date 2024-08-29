@@ -6,6 +6,7 @@
   - [Table of Contents](#table-of-contents)
   - [About ](#about-)
   - [Getting Started ](#getting-started-)
+    - [安装依赖](#安装依赖)
     - [Building](#building)
     - [URDF转SDF](#urdf转sdf)
     - [](#)
@@ -16,6 +17,16 @@
 Write about 1-2 paragraphs describing the purpose of your project.
 
 ## Getting Started <a name = "getting_started"></a>
+
+### 安装依赖
+
+```bash
+sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt install ros-$ROS_DISTRO-ros-gz
+sudo apt install ros-$ROS_DISTRO-ign-ros2-control
+```
 
 ### Building
 
