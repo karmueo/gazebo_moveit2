@@ -25,7 +25,7 @@
         <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster">
         </plugin>
         <scene>
-            <ambient>0.3 0.3 0.3</ambient>
+            <ambient>0.7 0.7 0.7</ambient>
             <background>0.7 0.7 0.7</background>
             <shadows>false</shadows>
         </scene>
@@ -38,7 +38,7 @@
             <pose>0 0 10 0 0 0</pose>
             <diffuse>0.8 0.8 0.8 1</diffuse>
             <specular>0.2 0.2 0.2 1</specular>
-            <direction>-0.3 0.3 -0.9</direction>
+            <direction>0.0 -0.7 -0.3</direction>
         </light>
 
 

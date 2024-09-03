@@ -47,7 +47,7 @@ ros2 run aubo_description xacro2sdf.bash
 ### 
 
 ```bash
-export IGN_GAZEBO_RESOURCE_PATH=/path/to/your/models:$IGN_GAZEBO_RESOURCE_PATH
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/path/to/your/models
 ```
 
 ### 启动示例
