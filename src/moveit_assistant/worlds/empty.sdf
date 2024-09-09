@@ -57,23 +57,17 @@
                         </plane>
                     </geometry>
                 </collision>
-                <!-- <visual name="ground_plane_visual">
-                    <geometry>
-                        <plane>
-                            <normal>0 0 1</normal>
-                            <size>1 1</size>
-                        </plane>
-                    </geometry>
-                    <material>
-                        <diffuse>0.8 0.8 0.8 1</diffuse>
-                        <specular>0.8 0.8 0.8 1</specular>
-                    </material>
-                </visual> -->
             </link>
         </model>
 
+        <include>
+            <uri>
+        file://install/share/calibration/aruco_default/model.sdf
+            </uri>
+            <pose>0.257 -2.6 1.5 1.57 0 -3.14</pose>
+        </include>
 
-        <model name="target">
+        <!-- <model name="target">
             <static>false</static>
             <pose>1 -0.25 0.5 3.1415927 0 0</pose>
             <link name="target_link">
@@ -96,8 +90,8 @@
                         </box>
                     </geometry>
                     <material>
-                        <diffuse>1 0 0 1</diffuse>                        <!-- 红色 -->
-                        <specular>1 0 0 1</specular>                        <!-- 红色 -->
+                        <diffuse>1 0 0 1</diffuse>
+                        <specular>1 0 0 1</specular>
                     </material>
                 </visual>
                 <collision name="target_collision">
@@ -108,7 +102,7 @@
                     </geometry>
                 </collision>
             </link>
-        </model>
+        </model> -->
 
         <!-- Static target -->
         <!-- <model name="target">

@@ -25,9 +25,12 @@
     <disable_collisions link1="base_link" link2="upperArm_Link" reason="Never"/>
     <disable_collisions link1="base_link" link2="wrist1_Link" reason="Never"/>
     <disable_collisions link1="base_link" link2="wrist2_Link" reason="Never"/>
-    <disable_collisions link1="camera_link" link2="wrist1_Link" reason="Never"/>
-    <disable_collisions link1="camera_link" link2="wrist2_Link" reason="Never"/>
-    <disable_collisions link1="camera_link" link2="wrist3_Link" reason="Adjacent"/>
+    <disable_collisions link1="left_camera_link" link2="wrist1_Link" reason="Never"/>
+    <disable_collisions link1="left_camera_link" link2="wrist2_Link" reason="Never"/>
+    <disable_collisions link1="left_camera_link" link2="wrist3_Link" reason="Adjacent"/>
+    <disable_collisions link1="right_camera_link" link2="wrist1_Link" reason="Never"/>
+    <disable_collisions link1="right_camera_link" link2="wrist2_Link" reason="Never"/>
+    <disable_collisions link1="right_camera_link" link2="wrist3_Link" reason="Adjacent"/>
     <disable_collisions link1="foreArm_Link" link2="upperArm_Link" reason="Adjacent"/>
     <disable_collisions link1="foreArm_Link" link2="wrist1_Link" reason="Adjacent"/>
     <disable_collisions link1="foreArm_Link" link2="wrist2_Link" reason="Never"/>
